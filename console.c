@@ -76,6 +76,7 @@ static bool do_source_cmd(int argc, char *argv[]);
 static bool do_log_cmd(int argc, char *argv[]);
 static bool do_time_cmd(int argc, char *argv[]);
 static bool do_comment_cmd(int argc, char *argv[]);
+bool do_hello(int argc, char *argv[]);
 
 static void init_in();
 
@@ -101,6 +102,7 @@ void init_cmd()
     add_cmd("log", do_log_cmd, " file           | Copy output to file");
     add_cmd("time", do_time_cmd, " cmd arg ...    | Time command execution");
     add_cmd("#", do_comment_cmd, " ...            | Display comment");
+    add_cmd("hello", do_hello, "                  | Print hello message");
     add_param("simulation", &simulation, "Start/Stop simulation mode", NULL);
     add_param("verbose", &verblevel, "Verbosity level", NULL);
     add_param("error", &err_limit, "Number of errors until exit", NULL);
@@ -261,6 +263,11 @@ void add_quit_helper(cmd_function qf)
 void set_echo(bool on)
 {
     echo = on ? 1 : 0;
+}
+
+bool do_hello(int argc, char *argv[])
+{
+    return (bool) printf("Hello World\n");
 }
 
 /* Built-in commands */

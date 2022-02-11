@@ -1,6 +1,5 @@
 CC = gcc
-CFLAGS = -O1 -g -Wall -Werror -Idudect -I.
-
+CFLAGS = -O1 -g -Wall -Werror -Idudect -I. 
 GIT_HOOKS := .git/hooks/applied
 DUT_DIR := dudect
 all: $(GIT_HOOKS) qtest
@@ -42,7 +41,7 @@ deps := $(OBJS:%.o=.%.o.d)
 
 qtest: $(OBJS)
 	$(VECHO) "  LD\t$@\n"
-	$(Q)$(CC) $(LDFLAGS) -o $@ $^ -lm
+	$(Q)$(CC) $(LDFLAGS) -o $@ $^ -lm 
 
 %.o: %.c
 	@mkdir -p .$(DUT_DIR)
