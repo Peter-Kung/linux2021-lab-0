@@ -215,9 +215,9 @@ void q_sort(queue_t *q)
     if (!q || !q->head)
         return;
 
-    list_ele_t *mergeSort(list_ele_t *);
+    void mergesort(list_ele_t **);
 
-    q->head = mergeSort(q->head);
+    mergesort(&q->head);
     list_ele_t *tmp = q->head;
     while (tmp->next) {
         tmp = tmp->next;
@@ -225,39 +225,45 @@ void q_sort(queue_t *q)
     q->tail = tmp;
 }
 
-
-list_ele_t *mergeSort(list_ele_t *head)
+void mergesort(list_ele_t **head)
 {
-    list_ele_t *merge(list_ele_t * l1, list_ele_t * l2);
-    if (!head || !head->next)
-        return head;
+    void merge(list_ele_t *, list_ele_t *, list_ele_t **);
+    /* check if bigger than 2*/
+    if (!*head || !(*head)->next)
+        return;
 
-    list_ele_t *turtle = head;
-    list_ele_t *rabbit = head->next;
-    while (rabbit && rabbit->next) {
-        turtle = turtle->next;
-        rabbit = rabbit->next->next;
+    /* init */
+    list_ele_t *t = *head;
+    list_ele_t *r = (*head)->next;
+
+    /* fast-slow pointer */
+    while (r && r->next) {
+        t = t->next;
+        r = r->next->next;
     }
-    rabbit = turtle->next;
-    turtle->next = NULL;
 
-    list_ele_t *l1 = mergeSort(head);
-    list_ele_t *l2 = mergeSort(rabbit);
+    /* splite into two list*/
+    r = t->next;
+    t->next = NULL;
+    t = *head;
 
-    return merge(l1, l2);
+    /* recursive */
+    mergesort(&t);
+    mergesort(&r);
+
+    /* merge */
+    merge(t, r, head);
+
+    return;
 }
 
 
-list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
+void merge(list_ele_t *l1, list_ele_t *l2, list_ele_t **head)
 {
-    list_ele_t *head = NULL, *cur = NULL;
+    list_ele_t *cur = NULL;
     list_ele_t *tmp = NULL;
-
-    if (!l1)
-        return l2;
-    if (!l2)
-        return l1;
-
+    *head = NULL;
+    /* compare two node val */
     while (l1 && l2) {
         if (strcmp(l1->value, l2->value) < 0) {
             tmp = l1;
@@ -266,19 +272,23 @@ list_ele_t *merge(list_ele_t *l1, list_ele_t *l2)
             tmp = l2;
             l2 = l2->next;
         }
-
-        if (!head) {
-            head = cur = tmp;
-        } else {
+        if (!*head)
+            *head = cur = tmp;
+        else {
             cur->next = tmp;
-            cur = cur->next;
+            cur = tmp;
         }
     }
 
-    if (l1)
-        cur->next = l1;
-    else if (l2)
-        cur->next = l2;
+    /* if l1 or l2 exist */
+    if (l1 || l2)
+        if (l1)
+            cur->next = l1;
+        else
+            cur->next = l2;
+    else
+        cur->next = NULL;
 
-    return head;
+
+    return;
 }
